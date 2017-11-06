@@ -1,4 +1,4 @@
-package com.example.android.emojify;
+package emojify.me;
 
 import org.junit.Test;
 

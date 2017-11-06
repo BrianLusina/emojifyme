@@ -1,34 +1,163 @@
-apply plugin: 'com.android.application'
+apply plugin: "com.android.application"
+apply plugin: 'kotlin-android'
+apply plugin: "kotlin-kapt"
+
+import com.android.build.OutputFile
+
+ext{
+    multidexSupport = "1.0.2"
+
+    playServicesVersion = "11.4.2"
+    daggerVersion = "2.12"
+
+    rxJavaVersion = "2.1.6"
+    rxAndroidVersion = "2.0.1"
+    rxKotlinVersion = "2.1.0"
+}
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
-        applicationId "com.example.android.emojify"
-        minSdkVersion 15
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        applicationId "com.emojify.me"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters "armeabi-v7a", "x86", "mips", "x86_64", "armeabi", "arm64-v8a"
+        }
+        multiDexEnabled = true
+        vectorDrawables.useSupportLibrary = true
     }
+
+    /**
+     * The aapt tool may inflate PNG files that have already been compressed.
+     * To prevent this, you can use the cruncherEnabled flag in Gradle to disable this
+     * process for PNG files:
+     * */
+    aaptOptions {
+        cruncherEnabled = false
+    }
+
+    splits {
+        abi {
+            // Enables building multiple APKs per ABI.
+            enable rootProject.ext.enableSeparateBuildPerCPUArchitecture
+            universalApk rootProject.ext.enableUniversalApk
+
+            // By default all ABIs are included, so use reset() and include to specify that we only
+            // want APKs for x86, armeabi-v7a, and mips.
+            // Resets the list of ABIs that Gradle should create APKs for to none.
+            reset()
+
+            // Specifies a list of ABIs that Gradle should create APKs for.
+            include "armeabi", "armeabi-v7a", "arm64-v8a", "mips", "x86", "x86_64"
+        }
+    }
+
+
     buildTypes {
         release {
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            // signingConfig signingConfigs.release
+            resValue "string", "app_name", "EmojifyMe"
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+
+        debug {
+            debuggable true
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            applicationIdSuffix ".debug"
+            testCoverageEnabled true
+            resValue "string", "app_name", "EmojifyMe-Dev"
+        }
+    }
+
+    packagingOptions {
+        exclude "META-INF/LICENSE.txt"
+        exclude "META-INF/NOTICE.txt"
+        exclude "META-INF/DEPENDENCIES.txt"
+        exclude "META-INF/DEPENDENCIES"
+        exclude "META-INF/dependencies.txt"
+        exclude "META-INF/LICENSE"
+        exclude "META-INF/license.txt"
+        exclude "META-INF/LGPL2.1"
+        exclude "META-INF/NOTICE.txt"
+        exclude "META-INF/NOTICE"
+        exclude "META-INF/notice.txt"
+    }
+
+    sourceSets{
+        main{
+            java.srcDirs += "src/main/kotlin"
+            res.srcDirs = [
+                    "src/main/res/layouts",
+                    "src/main/res"
+            ]
+        }
+
+        androidTest{
+            java.srcDirs += "src/main/kotlin"
+        }
+
+        test{
+            java.srcDirs += "src/main/kotlin"
+        }
+    }
+
+    applicationVariants.all { variant ->
+        // Assigns a different version code for each output APK
+        // other than the universal APK.
+        variant.outputs.all { output ->
+            // Stores the value of ext.abiCodes that is associated with the ABI for this variant.
+            // Determines the ABI for this variant and returns the mapped value.
+            def baseAbiVersionCode = rootProject.ext.abiCodes.get(output.getFilter(OutputFile.ABI))
+
+            // Because abiCodes.get() returns null for ABIs that are not mapped by ext.abiCodes,
+            // the following code does not override the version code for universal APKs.
+            // However, because we want universal APKs to have the lowest version code,
+            // this outcome is desirable.
+            if (baseAbiVersionCode != null) {
+                // Assigns the new version code to versionCodeOverride, which changes the version code
+                // for only the output APK, not for the variant itself. Skipping this step simply
+                // causes Gradle to use the value of variant.versionCode for the APK.
+                output.versionCodeOverride = baseAbiVersionCode * 1000 + variant.versionCode
+            } else {
+                // this will make sure universal apks have the lowest version code
+                output.versionCodeOverride = variant.versionCode
+            }
         }
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "com.android.support:design:$supportLibVersion"
+    implementation "com.android.support:appcompat-v7:$supportLibVersion"
+    implementation "com.android.support:multidex:$multidexSupport"
+
+    // play services
+    implementation "com.google.android.gms:play-services-vision:$playServicesVersion"
+
+    // dagger
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    // reactive
+    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rxKotlinVersion"
+
+    // kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    testImplementation "junit:junit:$jUnitVersion"
+    androidTestImplementation("com.android.support.test.espresso:espresso-core:$espressoVersion", {
+        exclude group: "com.android.support", module: "support-annotations"
     })
-    compile 'com.android.support:design:25.2.0'
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.google.android.gms:play-services-vision:10.2.0'
-    compile 'com.jakewharton:butterknife:8.4.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
-    compile 'com.jakewharton.timber:timber:4.5.0'
-    testCompile 'junit:junit:4.12'
 }

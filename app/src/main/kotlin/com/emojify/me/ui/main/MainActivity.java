@@ -1,20 +1,4 @@
-/*
-* Copyright (C) 2017 The Android Open Source Project
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*  	http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
-
-package com.example.android.emojify;
+package com.emojify.me.ui.main;
 
 
 import android.Manifest;
@@ -29,22 +13,20 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.emojify.me.ui.base.BaseActivity;
+import com.emojify.me.utils.BitmapUtils;
+import com.emojify.me.utils.Emojifier;
+
 import java.io.File;
 import java.io.IOException;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import timber.log.Timber;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -52,14 +34,14 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String FILE_PROVIDER_AUTHORITY = "com.example.android.fileprovider";
 
-    @BindView(R.id.image_view) ImageView mImageView;
+    @BindView(com.example.android.emojify.R.id.image_view) ImageView mImageView;
 
-    @BindView(R.id.emojify_button) Button mEmojifyButton;
-    @BindView(R.id.share_button) FloatingActionButton mShareFab;
-    @BindView(R.id.save_button) FloatingActionButton mSaveFab;
-    @BindView(R.id.clear_button) FloatingActionButton mClearFab;
+    @BindView(com.example.android.emojify.R.id.emojify_button) Button mEmojifyButton;
+    @BindView(com.example.android.emojify.R.id.share_button) FloatingActionButton mShareFab;
+    @BindView(com.example.android.emojify.R.id.save_button) FloatingActionButton mSaveFab;
+    @BindView(com.example.android.emojify.R.id.clear_button) FloatingActionButton mClearFab;
 
-    @BindView(R.id.title_text_view) TextView mTitleTextView;
+    @BindView(com.example.android.emojify.R.id.title_text_view) TextView mTitleTextView;
 
     private String mTempPhotoPath;
 
@@ -69,19 +51,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        // Bind the views
-        ButterKnife.bind(this);
-
-        // Set up Timber
-        Timber.plant(new Timber.DebugTree());
+        setContentView(com.example.android.emojify.R.layout.activity_main);
     }
 
     /**
      * OnClick method for "Emojify Me!" Button. Launches the camera app.
      */
-    @OnClick(R.id.emojify_button)
+    @OnClick(com.example.android.emojify.R.id.emojify_button)
     public void emojifyMe() {
         // Check for the external storage permission
         if (ContextCompat.checkSelfPermission(this,
@@ -110,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                     launchCamera();
                 } else {
                     // If you do not get permission, show a Toast
-                    Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, com.example.android.emojify.R.string.permission_denied, Toast.LENGTH_SHORT).show();
                 }
                 break;
             }
@@ -196,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * OnClick method for the save button.
      */
-    @OnClick(R.id.save_button)
+    @OnClick(com.example.android.emojify.R.id.save_button)
     public void saveMe() {
         // Delete the temporary image file
         BitmapUtils.deleteImageFile(this, mTempPhotoPath);
@@ -208,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * OnClick method for the share button, saves and shares the new bitmap.
      */
-    @OnClick(R.id.share_button)
+    @OnClick(com.example.android.emojify.R.id.share_button)
     public void shareMe() {
         // Delete the temporary image file
         BitmapUtils.deleteImageFile(this, mTempPhotoPath);
@@ -223,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * OnClick for the clear button, resets the app to original state.
      */
-    @OnClick(R.id.clear_button)
+    @OnClick(com.example.android.emojify.R.id.clear_button)
     public void clearImage() {
         // Clear the image and toggle the view visibility
         mImageView.setImageResource(0);

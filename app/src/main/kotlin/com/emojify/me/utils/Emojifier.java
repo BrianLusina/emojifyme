@@ -1,20 +1,4 @@
-/*
-* Copyright (C) 2017 The Android Open Source Project
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*  	http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
-
-package com.example.android.emojify;
+package com.emojify.me.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -26,8 +10,6 @@ import android.widget.Toast;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
-
-import timber.log.Timber;
 
 class Emojifier {
 
@@ -57,15 +39,12 @@ class Emojifier {
         // Detect the faces
         SparseArray<Face> faces = detector.detect(frame);
 
-        // Log the number of faces
-        Timber.d("detectFaces: number of faces = " + faces.size());
-
         // Initialize result bitmap to original picture
         Bitmap resultBitmap = picture;
 
         // If there are no faces detected, show a Toast message
         if (faces.size() == 0) {
-            Toast.makeText(context, R.string.no_faces_message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, com.example.android.emojify.R.string.no_faces_message, Toast.LENGTH_SHORT).show();
         } else {
 
             // Iterate through the faces
@@ -76,39 +55,39 @@ class Emojifier {
                 switch (whichEmoji(face)) {
                     case SMILE:
                         emojiBitmap = BitmapFactory.decodeResource(context.getResources(),
-                                R.drawable.smile);
+                                com.example.android.emojify.R.drawable.smile);
                         break;
                     case FROWN:
                         emojiBitmap = BitmapFactory.decodeResource(context.getResources(),
-                                R.drawable.frown);
+                                com.example.android.emojify.R.drawable.frown);
                         break;
                     case LEFT_WINK:
                         emojiBitmap = BitmapFactory.decodeResource(context.getResources(),
-                                R.drawable.leftwink);
+                                com.example.android.emojify.R.drawable.leftwink);
                         break;
                     case RIGHT_WINK:
                         emojiBitmap = BitmapFactory.decodeResource(context.getResources(),
-                                R.drawable.rightwink);
+                                com.example.android.emojify.R.drawable.rightwink);
                         break;
                     case LEFT_WINK_FROWN:
                         emojiBitmap = BitmapFactory.decodeResource(context.getResources(),
-                                R.drawable.leftwinkfrown);
+                                com.example.android.emojify.R.drawable.leftwinkfrown);
                         break;
                     case RIGHT_WINK_FROWN:
                         emojiBitmap = BitmapFactory.decodeResource(context.getResources(),
-                                R.drawable.rightwinkfrown);
+                                com.example.android.emojify.R.drawable.rightwinkfrown);
                         break;
                     case CLOSED_EYE_SMILE:
                         emojiBitmap = BitmapFactory.decodeResource(context.getResources(),
-                                R.drawable.closed_smile);
+                                com.example.android.emojify.R.drawable.closed_smile);
                         break;
                     case CLOSED_EYE_FROWN:
                         emojiBitmap = BitmapFactory.decodeResource(context.getResources(),
-                                R.drawable.closed_frown);
+                                com.example.android.emojify.R.drawable.closed_frown);
                         break;
                     default:
                         emojiBitmap = null;
-                        Toast.makeText(context, R.string.no_emoji, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, com.example.android.emojify.R.string.no_emoji, Toast.LENGTH_SHORT).show();
                 }
 
                 // Add the emojiBitmap to the proper position in the original image
@@ -132,13 +111,6 @@ class Emojifier {
      */
 
     private static Emoji whichEmoji(Face face) {
-        // Log all the probabilities
-        Timber.d("whichEmoji: smilingProb = " + face.getIsSmilingProbability());
-        Timber.d("whichEmoji: leftEyeOpenProb = "
-                + face.getIsLeftEyeOpenProbability());
-        Timber.d("whichEmoji: rightEyeOpenProb = "
-                + face.getIsRightEyeOpenProbability());
-
 
         boolean smiling = face.getIsSmilingProbability() > SMILING_PROB_THRESHOLD;
 
@@ -170,10 +142,6 @@ class Emojifier {
             }
         }
 
-
-        // Log the chosen Emoji
-        Timber.d("whichEmoji: " + emoji.name());
-        
         // return the chosen Emoji
         return emoji;
     }

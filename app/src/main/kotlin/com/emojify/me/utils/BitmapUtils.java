@@ -1,20 +1,4 @@
-/*
-* Copyright (C) 2017 The Android Open Source Project
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*  	http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
-
-package com.example.android.emojify;
+package com.emojify.me.utils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -108,7 +92,7 @@ class BitmapUtils {
 
         // If there is an error deleting the file, show a Toast
         if (!deleted) {
-            String errorMessage = context.getString(R.string.error);
+            String errorMessage = context.getString(com.example.android.emojify.R.string.error);
             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
         }
 
@@ -169,7 +153,7 @@ class BitmapUtils {
             galleryAddPic(context, savedImagePath);
 
             // Show a Toast with the save location
-            String savedMessage = context.getString(R.string.saved_message, savedImagePath);
+            String savedMessage = context.getString(com.example.android.emojify.R.string.saved_message, savedImagePath);
             Toast.makeText(context, savedMessage, Toast.LENGTH_SHORT).show();
         }
 

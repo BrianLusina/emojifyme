@@ -5,4 +5,8 @@ package com.emojify.me.ui.base
  * @Notes BasePresenter from which all presenters will inherit from
  */
 interface BasePresenter<V : BaseView> {
+
+    fun onAttach(baseView : V)
+
+    fun onDetach()
 }

@@ -1,5 +1,6 @@
 package com.emojify.me.ui.main;
 
+import static com.emojify.me.ui.main.Constants.FILE_PROVIDER_AUTHORITY;
 
 import android.Manifest;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.emojify.me.R;
 import com.emojify.me.ui.base.BaseActivity;
 import com.emojify.me.utils.BitmapUtils;
 import com.emojify.me.utils.Emojifier;
@@ -32,7 +34,6 @@ public class MainActivity extends BaseActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_STORAGE_PERMISSION = 1;
 
-    private static final String FILE_PROVIDER_AUTHORITY = "com.example.android.fileprovider";
     private String mTempPhotoPath;
 
     private Bitmap mResultsBitmap;
@@ -41,7 +42,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.example.android.emojify.R.layout.activity_main);
+        setContentView(R.layout.activity_main);
     }
 
     /**
@@ -75,7 +76,7 @@ public class MainActivity extends BaseActivity {
                     launchCamera();
                 } else {
                     // If you do not get permission, show a Toast
-                    Toast.makeText(this, com.example.android.emojify.R.string.permission_denied, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_SHORT).show();
                 }
                 break;
             }

@@ -11,6 +11,8 @@ import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 
+import com.emojify.me.R;
+
 public class Emojifier {
 
 
@@ -25,7 +27,7 @@ public class Emojifier {
      * @param context The application context.
      * @param picture The picture in which to detect the faces.
      */
-    static Bitmap detectFacesandOverlayEmoji(Context context, Bitmap picture) {
+    public static Bitmap detectFacesandOverlayEmoji(Context context, Bitmap picture) {
 
         // Create the face detector, disable tracking and enable classifications
         FaceDetector detector = new FaceDetector.Builder(context)
@@ -44,7 +46,7 @@ public class Emojifier {
 
         // If there are no faces detected, show a Toast message
         if (faces.size() == 0) {
-            Toast.makeText(context, com.example.android.emojify.R.string.no_faces_message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.no_faces_message, Toast.LENGTH_SHORT).show();
         } else {
 
             // Iterate through the faces
@@ -55,39 +57,39 @@ public class Emojifier {
                 switch (whichEmoji(face)) {
                     case SMILE:
                         emojiBitmap = BitmapFactory.decodeResource(context.getResources(),
-                                com.example.android.emojify.R.drawable.smile);
+                                R.drawable.smile);
                         break;
                     case FROWN:
                         emojiBitmap = BitmapFactory.decodeResource(context.getResources(),
-                                com.example.android.emojify.R.drawable.frown);
+                                R.drawable.frown);
                         break;
                     case LEFT_WINK:
                         emojiBitmap = BitmapFactory.decodeResource(context.getResources(),
-                                com.example.android.emojify.R.drawable.leftwink);
+                                R.drawable.leftwink);
                         break;
                     case RIGHT_WINK:
                         emojiBitmap = BitmapFactory.decodeResource(context.getResources(),
-                                com.example.android.emojify.R.drawable.rightwink);
+                                R.drawable.rightwink);
                         break;
                     case LEFT_WINK_FROWN:
                         emojiBitmap = BitmapFactory.decodeResource(context.getResources(),
-                                com.example.android.emojify.R.drawable.leftwinkfrown);
+                                R.drawable.leftwinkfrown);
                         break;
                     case RIGHT_WINK_FROWN:
                         emojiBitmap = BitmapFactory.decodeResource(context.getResources(),
-                                com.example.android.emojify.R.drawable.rightwinkfrown);
+                                R.drawable.rightwinkfrown);
                         break;
                     case CLOSED_EYE_SMILE:
                         emojiBitmap = BitmapFactory.decodeResource(context.getResources(),
-                                com.example.android.emojify.R.drawable.closed_smile);
+                                R.drawable.closed_smile);
                         break;
                     case CLOSED_EYE_FROWN:
                         emojiBitmap = BitmapFactory.decodeResource(context.getResources(),
-                                com.example.android.emojify.R.drawable.closed_frown);
+                                R.drawable.closed_frown);
                         break;
                     default:
                         emojiBitmap = null;
-                        Toast.makeText(context, com.example.android.emojify.R.string.no_emoji, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.no_emoji, Toast.LENGTH_SHORT).show();
                 }
 
                 // Add the emojiBitmap to the proper position in the original image

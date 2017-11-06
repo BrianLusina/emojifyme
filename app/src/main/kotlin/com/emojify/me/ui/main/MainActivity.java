@@ -33,16 +33,6 @@ public class MainActivity extends BaseActivity {
     private static final int REQUEST_STORAGE_PERMISSION = 1;
 
     private static final String FILE_PROVIDER_AUTHORITY = "com.example.android.fileprovider";
-
-    @BindView(com.example.android.emojify.R.id.image_view) ImageView mImageView;
-
-    @BindView(com.example.android.emojify.R.id.emojify_button) Button mEmojifyButton;
-    @BindView(com.example.android.emojify.R.id.share_button) FloatingActionButton mShareFab;
-    @BindView(com.example.android.emojify.R.id.save_button) FloatingActionButton mSaveFab;
-    @BindView(com.example.android.emojify.R.id.clear_button) FloatingActionButton mClearFab;
-
-    @BindView(com.example.android.emojify.R.id.title_text_view) TextView mTitleTextView;
-
     private String mTempPhotoPath;
 
     private Bitmap mResultsBitmap;
@@ -57,7 +47,6 @@ public class MainActivity extends BaseActivity {
     /**
      * OnClick method for "Emojify Me!" Button. Launches the camera app.
      */
-    @OnClick(com.example.android.emojify.R.id.emojify_button)
     public void emojifyMe() {
         // Check for the external storage permission
         if (ContextCompat.checkSelfPermission(this,
@@ -151,11 +140,11 @@ public class MainActivity extends BaseActivity {
     private void processAndSetImage() {
 
         // Toggle Visibility of the views
-        mEmojifyButton.setVisibility(View.GONE);
-        mTitleTextView.setVisibility(View.GONE);
-        mSaveFab.setVisibility(View.VISIBLE);
-        mShareFab.setVisibility(View.VISIBLE);
-        mClearFab.setVisibility(View.VISIBLE);
+//        mEmojifyButton.setVisibility(View.GONE);
+//        mTitleTextView.setVisibility(View.GONE);
+//        mSaveFab.setVisibility(View.VISIBLE);
+//        mShareFab.setVisibility(View.VISIBLE);
+//        mClearFab.setVisibility(View.VISIBLE);
 
         // Resample the saved image to fit the ImageView
         mResultsBitmap = BitmapUtils.resamplePic(this, mTempPhotoPath);
@@ -164,15 +153,14 @@ public class MainActivity extends BaseActivity {
         // Detect the faces and overlay the appropriate emoji
         mResultsBitmap = Emojifier.detectFacesandOverlayEmoji(this, mResultsBitmap);
 
-        // Set the new bitmap to the ImageView
-        mImageView.setImageBitmap(mResultsBitmap);
+//        // Set the new bitmap to the ImageView
+//        mImageView.setImageBitmap(mResultsBitmap);
     }
 
 
     /**
      * OnClick method for the save button.
      */
-    @OnClick(com.example.android.emojify.R.id.save_button)
     public void saveMe() {
         // Delete the temporary image file
         BitmapUtils.deleteImageFile(this, mTempPhotoPath);
@@ -184,7 +172,6 @@ public class MainActivity extends BaseActivity {
     /**
      * OnClick method for the share button, saves and shares the new bitmap.
      */
-    @OnClick(com.example.android.emojify.R.id.share_button)
     public void shareMe() {
         // Delete the temporary image file
         BitmapUtils.deleteImageFile(this, mTempPhotoPath);
@@ -199,15 +186,14 @@ public class MainActivity extends BaseActivity {
     /**
      * OnClick for the clear button, resets the app to original state.
      */
-    @OnClick(com.example.android.emojify.R.id.clear_button)
     public void clearImage() {
         // Clear the image and toggle the view visibility
-        mImageView.setImageResource(0);
-        mEmojifyButton.setVisibility(View.VISIBLE);
-        mTitleTextView.setVisibility(View.VISIBLE);
-        mShareFab.setVisibility(View.GONE);
-        mSaveFab.setVisibility(View.GONE);
-        mClearFab.setVisibility(View.GONE);
+//        mImageView.setImageResource(0);
+//        mEmojifyButton.setVisibility(View.VISIBLE);
+//        mTitleTextView.setVisibility(View.VISIBLE);
+//        mShareFab.setVisibility(View.GONE);
+//        mSaveFab.setVisibility(View.GONE);
+//        mClearFab.setVisibility(View.GONE);
 
         // Delete the temporary image file
         BitmapUtils.deleteImageFile(this, mTempPhotoPath);

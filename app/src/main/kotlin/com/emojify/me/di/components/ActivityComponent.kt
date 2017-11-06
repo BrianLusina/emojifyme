@@ -1,6 +1,7 @@
 package com.emojify.me.di.components
 
 import com.emojify.me.di.modules.ActivityModule
+import com.emojify.me.ui.main.MainActivity
 import dagger.Component
 
 /**
@@ -9,4 +10,7 @@ import dagger.Component
  */
 @Component(modules = arrayOf(ActivityModule::class), dependencies = arrayOf(AppComponent::class))
 interface ActivityComponent {
+
+    fun injectMain(mainActivity: MainActivity)
+
 }

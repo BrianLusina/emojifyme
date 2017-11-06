@@ -11,7 +11,7 @@ import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 
-class Emojifier {
+public class Emojifier {
 
 
     private static final float EMOJI_SCALE_FACTOR = .9f;

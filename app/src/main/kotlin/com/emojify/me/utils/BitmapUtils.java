@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-class BitmapUtils {
+public class BitmapUtils {
 
     private static final String FILE_PROVIDER_AUTHORITY = "com.example.android.fileprovider";
 

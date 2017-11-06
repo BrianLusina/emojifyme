@@ -5,4 +5,5 @@ package com.emojify.me.ui.base
  * @Notes Base presenter implementation
  */
 open class BasePresenterImpl<V : BaseView>: BasePresenter<V> {
+
 }

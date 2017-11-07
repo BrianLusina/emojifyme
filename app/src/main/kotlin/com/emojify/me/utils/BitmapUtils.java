@@ -1,6 +1,6 @@
 package com.emojify.me.utils;
 
-import static com.emojify.me.ui.main.Constants.FILE_PROVIDER_AUTHORITY;
+import static com.emojify.me.utils.Constants.FILE_PROVIDER_AUTHORITY;
 
 import android.content.Context;
 import android.content.Intent;

@@ -1,5 +1,5 @@
 @file:JvmName("Constants")
-package com.emojify.me.ui.main
+package com.emojify.me.utils
 
 /**
  * @author lusinabrian on 06/11/17.

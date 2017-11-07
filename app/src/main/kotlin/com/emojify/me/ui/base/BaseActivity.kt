@@ -15,9 +15,6 @@ import com.emojify.me.di.components.DaggerActivityComponent
  * @Notes Base Activity
  */
 abstract class BaseActivity : AppCompatActivity(), BaseView{
-    init {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-    }
 
     val activityComponent : ActivityComponent by lazy {
         DaggerActivityComponent.builder()

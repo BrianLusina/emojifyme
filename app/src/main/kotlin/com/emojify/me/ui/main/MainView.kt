@@ -7,4 +7,25 @@ import com.emojify.me.ui.base.BaseView
  * @Notes MainView that in
  */
 interface MainView : BaseView{
+
+    fun setupViewListeners()
+
+    fun emojifyMe()
+
+    fun launchCamera()
+
+    /**
+     * Displays permission rationale if the user denies permission
+     * */
+    fun displayPermissionRationale()
+
+    fun processAndSetImage()
+
+    fun clearImage()
+
+    /**
+     * Resamples the given picture given the photo path
+     * @param photoPath
+     * */
+    fun resamplePic(photoPath: String)
 }

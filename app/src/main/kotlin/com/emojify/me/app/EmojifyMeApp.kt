@@ -3,6 +3,7 @@ package com.emojify.me.app
 import android.app.Application
 import android.content.Context
 import android.support.multidex.MultiDex
+import android.support.v7.app.AppCompatDelegate
 import com.emojify.me.di.components.AppComponent
 import com.emojify.me.di.components.DaggerAppComponent
 import com.emojify.me.di.modules.AppModule
@@ -16,6 +17,9 @@ class EmojifyMeApp : Application(){
         DaggerAppComponent.builder()
                 .appModule(AppModule(this))
                 .build()
+    }
+    init {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
     }
 
     override fun onCreate() {

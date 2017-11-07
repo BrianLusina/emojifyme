@@ -7,27 +7,26 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.FileProvider
+import android.view.View
 import android.widget.Toast
 import com.emojify.me.R
 import com.emojify.me.ui.base.BaseActivity
 import com.emojify.me.utils.BitmapUtils
 import com.emojify.me.utils.Emojifier
-import java.io.File
-import java.io.IOException
+import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-class MainActivity : BaseActivity(), MainView {
+class MainActivity : BaseActivity(), MainView, View.OnClickListener {
 
     private var mTempPhotoPath: String? = null
 
     private var mResultsBitmap: Bitmap? = null
 
+    private val requestImageCapture = 1
+    private val requestStoragePermission = 1
+
     @Inject
     lateinit var mainPresenter: MainPresenter<MainView>
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,18 +36,41 @@ class MainActivity : BaseActivity(), MainView {
         mainPresenter.onAttach(this)
     }
 
-    /**
-     * OnClick method for "Emojify Me!" Button. Launches the camera app.
-     */
-    fun emojifyMe() {
-        // Check for the external storage permission
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+    override fun setupViewListeners() {
+        emojify_button.setOnClickListener(this)
+        clear_button.setOnClickListener(this)
+        save_button.setOnClickListener(this)
+        share_button.setOnClickListener(this)
+    }
 
+    override fun onClick(v: View?) {
+        when (v) {
+            emojify_button -> {
+                mainPresenter.onEmojifyMeBtnClicked()
+            }
+
+            clear_button -> {
+                mainPresenter.onClearBtnClicked()
+            }
+
+            save_button -> {
+                mainPresenter.onSaveBtnClicked()
+            }
+
+            share_button -> {
+                mainPresenter.onShareBtnClicked()
+            }
+        }
+    }
+
+    /**
+     * Launches the camera app.
+     */
+    override fun emojifyMe() {
+        // Check for the external storage permission
+        if (hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             // If you do not have permission, request it
-            ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    REQUEST_STORAGE_PERMISSION)
+            requestPermissionsSafely(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), requestStoragePermission)
         } else {
             // Launch the camera if the permission exists
             launchCamera()
@@ -59,93 +81,74 @@ class MainActivity : BaseActivity(), MainView {
                                             grantResults: IntArray) {
         // Called when you request permission to read and write to external storage
         when (requestCode) {
-            REQUEST_STORAGE_PERMISSION -> {
-                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // If you get permission, launch the camera
-                    launchCamera()
+            requestStoragePermission -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mainPresenter.onPermissionsGranted()
                 } else {
-                    // If you do not get permission, show a Toast
-                    Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_SHORT).show()
+                    mainPresenter.onPermissionDenied()
                 }
             }
         }
     }
 
+    override fun displayPermissionRationale() {
+        // If you do not get permission, show a Toast
+        Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_SHORT).show()
+    }
+
     /**
      * Creates a temporary image file and captures a picture to store in it.
      */
-    private fun launchCamera() {
-
+    override fun launchCamera() {
         // Create the capture image intent
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(packageManager) != null) {
-            // Create the temporary File where the photo should go
-            var photoFile: File? = null
-            try {
-                photoFile = BitmapUtils.createTempImageFile(this)
-            } catch (ex: IOException) {
-                // Error occurred while creating the File
-                ex.printStackTrace()
-            }
+            val photoUri = mainPresenter.onTakePicture()
+            // Add the URI so the camera can store the image
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
 
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-
-                // Get the path of the temporary file
-                mTempPhotoPath = photoFile.absolutePath
-
-                // Get the content URI for the image file
-                val photoURI = FileProvider.getUriForFile(this,
-                        FILE_PROVIDER_AUTHORITY,
-                        photoFile)
-
-                // Add the URI so the camera can store the image
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-
-                // Launch the camera activity
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-            }
+            // Launch the camera activity
+            startActivityForResult(takePictureIntent, requestImageCapture)
         }
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         // If the image capture activity was called and was successful
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == requestImageCapture && resultCode == Activity.RESULT_OK) {
             // Process the image and set it to the TextView
-            processAndSetImage()
+            mainPresenter.onActivityResultSuccess()
         } else {
-
             // Otherwise, delete the temporary image file
-            BitmapUtils.deleteImageFile(this, mTempPhotoPath)
+            mainPresenter.onActivityResultFailed()
         }
     }
 
     /**
      * Method for processing the captured image and setting it to the TextView.
      */
-    private fun processAndSetImage() {
-
+    override fun processAndSetImage() {
         // Toggle Visibility of the views
-        //        mEmojifyButton.setVisibility(View.GONE);
-        //        mTitleTextView.setVisibility(View.GONE);
-        //        mSaveFab.setVisibility(View.VISIBLE);
-        //        mShareFab.setVisibility(View.VISIBLE);
-        //        mClearFab.setVisibility(View.VISIBLE);
+        emojify_button.visibility = View.GONE
+        title_text_view.visibility = View.GONE
+        save_button.visibility = View.VISIBLE
+        share_button.visibility = View.VISIBLE
+        clear_button.visibility = View.VISIBLE
 
+        mainPresenter.onResamplePicRequest()
+    }
+
+    override fun resamplePic(photoPath: String) {
         // Resample the saved image to fit the ImageView
-        mResultsBitmap = BitmapUtils.resamplePic(this, mTempPhotoPath)
-
+        mResultsBitmap = BitmapUtils.resamplePic(this, photoPath)
 
         // Detect the faces and overlay the appropriate emoji
         mResultsBitmap = Emojifier.detectFacesandOverlayEmoji(this, mResultsBitmap)
 
-        //        // Set the new bitmap to the ImageView
-        //        mImageView.setImageBitmap(mResultsBitmap);
+        // Set the new bitmap to the ImageView
+        image_view.setImageBitmap(mResultsBitmap)
     }
-
 
     /**
      * OnClick method for the save button.
@@ -175,23 +178,13 @@ class MainActivity : BaseActivity(), MainView {
     /**
      * OnClick for the clear button, resets the app to original state.
      */
-    fun clearImage() {
+    override fun clearImage() {
         // Clear the image and toggle the view visibility
-        //        mImageView.setImageResource(0);
-        //        mEmojifyButton.setVisibility(View.VISIBLE);
-        //        mTitleTextView.setVisibility(View.VISIBLE);
-        //        mShareFab.setVisibility(View.GONE);
-        //        mSaveFab.setVisibility(View.GONE);
-        //        mClearFab.setVisibility(View.GONE);
-
-        // Delete the temporary image file
-        BitmapUtils.deleteImageFile(this, mTempPhotoPath)
-    }
-
-    companion object {
-
-
-        private val REQUEST_IMAGE_CAPTURE = 1
-        private val REQUEST_STORAGE_PERMISSION = 1
+        image_view.setImageResource(0)
+        emojify_button.visibility = View.VISIBLE
+        title_text_view.visibility = View.VISIBLE
+        share_button.visibility = View.GONE
+        save_button.visibility = View.GONE
+        clear_button.visibility = View.GONE
     }
 }

@@ -1,5 +1,6 @@
 package com.emojify.me.ui.main
 
+import android.net.Uri
 import com.emojify.me.data.DataManager
 import com.emojify.me.data.io.SchedulerProvider
 import com.emojify.me.ui.base.BasePresenterImpl
@@ -12,6 +13,57 @@ import javax.inject.Inject
  */
 class MainPresenterImpl<V : MainView>
 @Inject
-constructor(dataManager: DataManager, schedulerProvider: SchedulerProvider, compositeDisposable: CompositeDisposable): MainPresenter<V>, BasePresenterImpl<V>(dataManager, schedulerProvider, compositeDisposable){
+constructor(val dataManager: DataManager, val schedulerProvider: SchedulerProvider, compositeDisposable: CompositeDisposable): MainPresenter<V>, BasePresenterImpl<V>(dataManager, schedulerProvider, compositeDisposable){
 
+    // fixme: make key unique
+    private val sharedPrefsKey = "emojifyme"
+
+    override fun onAttach(baseView: V) {
+        super.onAttach(baseView)
+        baseView.setupViewListeners()
+    }
+
+    override fun onEmojifyMeBtnClicked() {
+        baseView.emojifyMe()
+    }
+
+    override fun onClearBtnClicked() {
+        val photoPath = dataManager.getImageFilePath(sharedPrefsKey)
+        dataManager.deleteImageFile(photoPath)
+        baseView.clearImage()
+    }
+
+    override fun onSaveBtnClicked() {
+    }
+
+    override fun onShareBtnClicked() {
+    }
+
+    override fun onPermissionDenied() {
+        baseView.displayPermissionRationale()
+    }
+
+    override fun onPermissionsGranted() {
+        baseView.launchCamera()
+    }
+
+    override fun onResamplePicRequest() {
+        val photoPath = dataManager.getImageFilePath(sharedPrefsKey)
+        baseView.resamplePic(photoPath)
+    }
+
+    override fun onActivityResultFailed() {
+        val photoPath = dataManager.getImageFilePath(sharedPrefsKey)
+        dataManager.deleteImageFile(photoPath)
+    }
+
+    override fun onActivityResultSuccess() {
+        baseView.processAndSetImage()
+    }
+
+    override fun onTakePicture() : Uri?{
+        val (tempImageFile, photoUri)= dataManager.createTempImageFile()
+        tempImageFile?.absolutePath?.let { dataManager.saveImageFilePath(sharedPrefsKey, it) }
+        return photoUri
+    }
 }

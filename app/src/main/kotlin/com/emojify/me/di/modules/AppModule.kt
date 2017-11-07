@@ -8,10 +8,13 @@ import com.emojify.me.data.file.FileHelper
 import com.emojify.me.data.file.FileHelperImpl
 import com.emojify.me.data.io.SchedulerProvider
 import com.emojify.me.data.io.SchedulerProviderImpl
+import com.emojify.me.data.prefs.SharedPrefsHelper
+import com.emojify.me.data.prefs.SharedPrefsHelperImpl
 import com.emojify.me.di.qualifiers.AppContextQualifier
 import dagger.Module
 import dagger.Provides
 import io.reactivex.disposables.CompositeDisposable
+import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -19,7 +22,7 @@ import javax.inject.Singleton
  * @Notes Application Module
  */
 @Module
-class AppModule(val mApplication: Application){
+class AppModule(val mApplication: Application) {
 
     @Provides
     @AppContextQualifier
@@ -30,6 +33,12 @@ class AppModule(val mApplication: Application){
     @Provides
     fun provideApplication(): Application {
         return mApplication
+    }
+
+    @Provides
+    @Named("emojifyPrefsName")
+    fun provideSharedPrefsName(): String{
+        return "emojifyPrefs"
     }
 
 
@@ -54,5 +63,11 @@ class AppModule(val mApplication: Application){
     @Singleton
     fun provideFileHelper(fileHelper: FileHelperImpl): FileHelper {
         return fileHelper
+    }
+
+    @Provides
+    @Singleton
+    fun providePrefsHelper(sharedPrefsHelper: SharedPrefsHelperImpl): SharedPrefsHelper {
+        return sharedPrefsHelper
     }
 }

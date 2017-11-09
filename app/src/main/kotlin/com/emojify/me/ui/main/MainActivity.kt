@@ -7,13 +7,13 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.emojify.me.R
 import com.emojify.me.ui.base.BaseActivity
-import com.emojify.me.utils.BitmapUtils
 import com.emojify.me.utils.Emojifier
+import com.emojify.me.utils.resamplePicUtil
+import com.emojify.me.utils.shareImageUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -153,7 +153,7 @@ class MainActivity : BaseActivity(), MainView, View.OnClickListener {
 
     override fun resamplePic(photoPath: String) {
         // Resample the saved image to fit the ImageView
-        mResultsBitmap = BitmapUtils.resamplePic(this, photoPath)
+        mResultsBitmap = resamplePicUtil(this, photoPath)
 
         // Detect the faces and overlay the appropriate emoji
         mResultsBitmap = Emojifier.detectFacesAndOverlayEmoji(this, mResultsBitmap)
@@ -162,8 +162,14 @@ class MainActivity : BaseActivity(), MainView, View.OnClickListener {
         image_view.setImageBitmap(mResultsBitmap)
     }
 
-    override fun shareImage(photoPath: String) {
-        BitmapUtils.shareImage(this, photoPath)
+    override fun shareImage(photoPath: String, savedPhotoLocation: String?) {
+        if (savedPhotoLocation != null){
+            // Show a Toast with the save location
+            Toast.makeText(this, getString(R.string.saved_message, savedPhotoLocation),
+                    Toast.LENGTH_SHORT).show()
+
+            shareImageUtil(this, photoPath)
+        }
     }
 
     /**

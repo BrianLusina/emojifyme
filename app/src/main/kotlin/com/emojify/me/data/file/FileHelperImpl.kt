@@ -67,10 +67,6 @@ class FileHelperImpl @Inject constructor(@AppContextQualifier val context: Conte
 
             // Add the image to the system gallery
             galleryAddPic(context, savedImagePath)
-
-            // Show a Toast with the save location
-            val savedMessage = context.getString(R.string.saved_message, savedImagePath)
-            Toast.makeText(context, savedMessage, Toast.LENGTH_SHORT).show()
         }
 
         return savedImagePath

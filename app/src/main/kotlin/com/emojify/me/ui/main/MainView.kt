@@ -16,8 +16,10 @@ interface MainView : BaseView{
 
     /**
      * Shares image
+     * @param photoPath
+     * @param savedPhotoLocation Saved photo location on device
      * */
-    fun shareImage(photoPath: String)
+    fun shareImage(photoPath: String, savedPhotoLocation: String?)
 
     /**
      * Displays permission rationale if the user denies permission

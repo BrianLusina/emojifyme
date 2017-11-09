@@ -47,9 +47,9 @@ constructor(val dataManager: DataManager, val schedulerProvider: SchedulerProvid
 
         dataManager.deleteImageFile(photoPath)
 
-        dataManager.saveImageFile(bitmap)
+        val savedPhotoLocation = dataManager.saveImageFile(bitmap)
 
-        baseView.shareImage(photoPath)
+        baseView.shareImage(photoPath, savedPhotoLocation)
     }
 
     override fun onPermissionDenied() {

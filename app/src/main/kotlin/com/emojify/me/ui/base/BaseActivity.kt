@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatDelegate
 import com.emojify.me.app.EmojifyMeApp
 import com.emojify.me.di.components.ActivityComponent
 import com.emojify.me.di.components.DaggerActivityComponent
+import com.emojify.me.di.modules.ActivityModule
 
 /**
  * @author lusinabrian on 06/11/17.
@@ -19,6 +20,7 @@ abstract class BaseActivity : AppCompatActivity(), BaseView{
     val activityComponent : ActivityComponent by lazy {
         DaggerActivityComponent.builder()
                 .appComponent((application as EmojifyMeApp).appComponent)
+                .activityModule(ActivityModule(this))
                 .build()
     }
 

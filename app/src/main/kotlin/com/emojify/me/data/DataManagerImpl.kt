@@ -1,6 +1,7 @@
 package com.emojify.me.data
 
 import android.graphics.Bitmap
+import android.net.Uri
 import com.emojify.me.data.file.FileHelper
 import com.emojify.me.data.prefs.SharedPrefsHelper
 import java.io.File
@@ -19,11 +20,11 @@ class DataManagerImpl @Inject constructor(
         return fileHelper.deleteImageFile(photoPath)
     }
 
-    override fun saveImageFile(mResultsBitmap: Bitmap): String? {
+    override fun saveImageFile(mResultsBitmap: Bitmap?): String? {
         return fileHelper.saveImageFile(mResultsBitmap)
     }
 
-    override fun createTempImageFile(): File? {
+    override fun createTempImageFile(): Pair<File?, Uri> {
         return fileHelper.createTempImageFile()
     }
 

@@ -1,5 +1,6 @@
 package com.emojify.me.ui.main
 
+import android.graphics.Bitmap
 import android.net.Uri
 import com.emojify.me.data.DataManager
 import com.emojify.me.data.io.SchedulerProvider
@@ -33,10 +34,22 @@ constructor(val dataManager: DataManager, val schedulerProvider: SchedulerProvid
         baseView.clearImage()
     }
 
-    override fun onSaveBtnClicked() {
+    override fun onSaveBtnClicked(bitmap: Bitmap?) {
+        val photoPath = dataManager.getImageFilePath(sharedPrefsKey)
+
+        dataManager.deleteImageFile(photoPath)
+
+        dataManager.saveImageFile(bitmap)
     }
 
-    override fun onShareBtnClicked() {
+    override fun onShareBtnClicked(bitmap: Bitmap?) {
+        val photoPath = dataManager.getImageFilePath(sharedPrefsKey)
+
+        dataManager.deleteImageFile(photoPath)
+
+        dataManager.saveImageFile(bitmap)
+
+        baseView.shareImage(photoPath)
     }
 
     override fun onPermissionDenied() {

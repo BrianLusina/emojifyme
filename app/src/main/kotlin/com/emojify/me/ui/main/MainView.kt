@@ -15,6 +15,11 @@ interface MainView : BaseView{
     fun launchCamera()
 
     /**
+     * Shares image
+     * */
+    fun shareImage(photoPath: String)
+
+    /**
      * Displays permission rationale if the user denies permission
      * */
     fun displayPermissionRationale()

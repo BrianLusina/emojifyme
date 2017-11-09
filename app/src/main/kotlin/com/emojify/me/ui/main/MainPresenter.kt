@@ -14,9 +14,16 @@ interface MainPresenter<V : MainView> : BasePresenter<V>{
 
     fun onClearBtnClicked()
 
-    fun onSaveBtnClicked()
+    /**
+     * Saves the given image
+     * */
+    fun onSaveBtnClicked(bitmap: Bitmap?)
 
-    fun onShareBtnClicked()
+    /**
+     * Shares the given image
+     * @param bitmap
+     * */
+    fun onShareBtnClicked(bitmap: Bitmap?)
 
     fun onPermissionsGranted()
 

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.emojify.me.R
@@ -18,7 +19,7 @@ import javax.inject.Inject
 
 class MainActivity : BaseActivity(), MainView, View.OnClickListener {
 
-    private var mTempPhotoPath: String? = null
+    //private var mTempPhotoPath: String? = null
 
     private var mResultsBitmap: Bitmap? = null
 
@@ -54,11 +55,11 @@ class MainActivity : BaseActivity(), MainView, View.OnClickListener {
             }
 
             save_button -> {
-                mainPresenter.onSaveBtnClicked()
+                mainPresenter.onSaveBtnClicked(mResultsBitmap)
             }
 
             share_button -> {
-                mainPresenter.onShareBtnClicked()
+                mainPresenter.onShareBtnClicked(mResultsBitmap)
             }
         }
     }
@@ -68,7 +69,7 @@ class MainActivity : BaseActivity(), MainView, View.OnClickListener {
      */
     override fun emojifyMe() {
         // Check for the external storage permission
-        if (hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (!hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             // If you do not have permission, request it
             requestPermissionsSafely(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), requestStoragePermission)
         } else {
@@ -106,22 +107,33 @@ class MainActivity : BaseActivity(), MainView, View.OnClickListener {
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(packageManager) != null) {
             val photoUri = mainPresenter.onTakePicture()
-            // Add the URI so the camera can store the image
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
 
-            // Launch the camera activity
-            startActivityForResult(takePictureIntent, requestImageCapture)
+            if (photoUri != null){
+                // Add the URI so the camera can store the image
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+
+                // Launch the camera activity
+                startActivityForResult(takePictureIntent, requestImageCapture)
+            }else{
+                Toast.makeText(this, "Could not Launch camera", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         // If the image capture activity was called and was successful
-        if (requestCode == requestImageCapture && resultCode == Activity.RESULT_OK) {
-            // Process the image and set it to the TextView
-            mainPresenter.onActivityResultSuccess()
-        } else {
-            // Otherwise, delete the temporary image file
-            mainPresenter.onActivityResultFailed()
+        when(resultCode){
+            Activity.RESULT_OK -> {
+                if(requestCode == requestImageCapture){
+                    // Process the image and set it to the ImageView
+                    mainPresenter.onActivityResultSuccess()
+                }
+            }
+
+            Activity.RESULT_CANCELED -> {
+                // Otherwise, delete the temporary image file
+                mainPresenter.onActivityResultFailed()
+            }
         }
     }
 
@@ -144,35 +156,14 @@ class MainActivity : BaseActivity(), MainView, View.OnClickListener {
         mResultsBitmap = BitmapUtils.resamplePic(this, photoPath)
 
         // Detect the faces and overlay the appropriate emoji
-        mResultsBitmap = Emojifier.detectFacesandOverlayEmoji(this, mResultsBitmap)
+        mResultsBitmap = Emojifier.detectFacesAndOverlayEmoji(this, mResultsBitmap)
 
         // Set the new bitmap to the ImageView
         image_view.setImageBitmap(mResultsBitmap)
     }
 
-    /**
-     * OnClick method for the save button.
-     */
-    fun saveMe() {
-        // Delete the temporary image file
-        BitmapUtils.deleteImageFile(this, mTempPhotoPath)
-
-        // Save the image
-        BitmapUtils.saveImage(this, mResultsBitmap)
-    }
-
-    /**
-     * OnClick method for the share button, saves and shares the new bitmap.
-     */
-    fun shareMe() {
-        // Delete the temporary image file
-        BitmapUtils.deleteImageFile(this, mTempPhotoPath)
-
-        // Save the image
-        BitmapUtils.saveImage(this, mResultsBitmap)
-
-        // Share the image
-        BitmapUtils.shareImage(this, mTempPhotoPath)
+    override fun shareImage(photoPath: String) {
+        BitmapUtils.shareImage(this, photoPath)
     }
 
     /**

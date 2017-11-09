@@ -3,9 +3,12 @@ package com.emojify.me.di.components
 import android.app.Application
 import android.content.Context
 import com.emojify.me.app.EmojifyMeApp
+import com.emojify.me.data.DataManager
+import com.emojify.me.data.io.SchedulerProvider
 import com.emojify.me.di.modules.AppModule
 import com.emojify.me.di.qualifiers.AppContextQualifier
 import dagger.Component
+import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Singleton
 
 /**
@@ -21,4 +24,10 @@ interface AppComponent {
     fun context(): Context
 
     val getApplication: Application
+
+    val dataManager: DataManager
+
+    val schedulerProvider: SchedulerProvider
+
+    val compositeDisposable : CompositeDisposable
 }

@@ -23,7 +23,7 @@ interface FileHelper {
      * @param mResultsBitmap Bitmap of the given photo
      * @return [String] Location of the image saved
      * */
-    fun saveImageFile(mResultsBitmap: Bitmap) : String?
+    fun saveImageFile(mResultsBitmap: Bitmap?) : String?
 
     /**
      * Creates a temporary image file

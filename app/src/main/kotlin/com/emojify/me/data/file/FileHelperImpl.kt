@@ -40,7 +40,7 @@ class FileHelperImpl @Inject constructor(@AppContextQualifier val context: Conte
         return deleted
     }
 
-    override fun saveImageFile(mResultsBitmap: Bitmap): String? {
+    override fun saveImageFile(mResultsBitmap: Bitmap?): String? {
         var savedImagePath: String? = null
 
         // Create the new file in the external storage
@@ -59,7 +59,7 @@ class FileHelperImpl @Inject constructor(@AppContextQualifier val context: Conte
             savedImagePath = imageFile.absolutePath
             try {
                 val fOut = FileOutputStream(imageFile)
-                mResultsBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut)
+                mResultsBitmap?.compress(Bitmap.CompressFormat.JPEG, 100, fOut)
                 fOut.close()
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -77,8 +77,7 @@ class FileHelperImpl @Inject constructor(@AppContextQualifier val context: Conte
     }
 
     override fun createTempImageFile() : Pair<File?, Uri>{
-        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss",
-                Locale.getDefault()).format(Date())
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val imageFileName = "JPEG_" + timeStamp + "_"
         val storageDir = context.externalCacheDir
 

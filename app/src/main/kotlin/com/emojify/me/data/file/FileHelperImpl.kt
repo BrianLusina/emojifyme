@@ -6,8 +6,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Environment
 import android.support.v4.content.FileProvider
-import android.widget.Toast
-import com.emojify.me.R
 import com.emojify.me.di.qualifiers.AppContextQualifier
 import com.emojify.me.utils.FILE_PROVIDER_AUTHORITY
 import java.io.File
@@ -29,15 +27,7 @@ class FileHelperImpl @Inject constructor(@AppContextQualifier val context: Conte
         val imageFile = File(photoPath)
 
         // Delete the image
-        val deleted = imageFile.delete()
-
-        // If there is an error deleting the file, show a Toast
-        if (!deleted) {
-            val errorMessage = context.getString(R.string.error)
-            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-        }
-
-        return deleted
+        return imageFile.delete()
     }
 
     override fun saveImageFile(mResultsBitmap: Bitmap?): String? {

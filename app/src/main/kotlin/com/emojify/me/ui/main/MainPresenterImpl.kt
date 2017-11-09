@@ -30,8 +30,8 @@ constructor(val dataManager: DataManager, val schedulerProvider: SchedulerProvid
 
     override fun onClearBtnClicked() {
         val photoPath = dataManager.getImageFilePath(sharedPrefsKey)
-        dataManager.deleteImageFile(photoPath)
-        baseView.clearImage()
+        val isFileDeleted = dataManager.deleteImageFile(photoPath)
+        baseView.clearImage(isFileDeleted)
     }
 
     override fun onSaveBtnClicked(bitmap: Bitmap?) {

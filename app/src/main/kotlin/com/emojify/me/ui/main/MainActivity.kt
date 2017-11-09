@@ -172,10 +172,7 @@ class MainActivity : BaseActivity(), MainView, View.OnClickListener {
         }
     }
 
-    /**
-     * OnClick for the clear button, resets the app to original state.
-     */
-    override fun clearImage() {
+    override fun clearImage(isFileDeleted: Boolean) {
         // Clear the image and toggle the view visibility
         image_view.setImageResource(0)
         emojify_button.visibility = View.VISIBLE
@@ -183,5 +180,10 @@ class MainActivity : BaseActivity(), MainView, View.OnClickListener {
         share_button.visibility = View.GONE
         save_button.visibility = View.GONE
         clear_button.visibility = View.GONE
+
+        // If there is an error deleting the file, show a Toast
+        if(!isFileDeleted){
+            Toast.makeText(this, getString(R.string.error), Toast.LENGTH_SHORT).show()
+        }
     }
 }

@@ -28,7 +28,11 @@ interface MainView : BaseView{
 
     fun processAndSetImage()
 
-    fun clearImage()
+    /**
+     * Clears views and image from View
+     * @param isFileDeleted Whether the file was successfully deleted
+     * */
+    fun clearImage(isFileDeleted: Boolean)
 
     /**
      * Resamples the given picture given the photo path

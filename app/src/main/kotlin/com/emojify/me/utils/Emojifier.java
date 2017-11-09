@@ -48,7 +48,6 @@ public class Emojifier {
         if (faces.size() == 0) {
             Toast.makeText(context, R.string.no_faces_message, Toast.LENGTH_SHORT).show();
         } else {
-
             // Iterate through the faces
             for (int i = 0; i < faces.size(); ++i) {
                 Face face = faces.valueAt(i);

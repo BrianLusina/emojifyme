@@ -22,6 +22,12 @@ interface MainView : BaseView{
     fun shareImage(photoPath: String, savedPhotoLocation: String?)
 
     /**
+     * Notify user of saved photo location
+     * @param savedPhotoLocation
+     * */
+    fun notifyUserOfSavedImage(savedPhotoLocation: String?)
+
+    /**
      * Displays permission rationale if the user denies permission
      * */
     fun displayPermissionRationale()

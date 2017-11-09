@@ -11,7 +11,7 @@ import android.view.View
 import android.widget.Toast
 import com.emojify.me.R
 import com.emojify.me.ui.base.BaseActivity
-import com.emojify.me.utils.Emojifier
+import com.emojify.me.api.emojifier.Emojifier
 import com.emojify.me.utils.resamplePicUtil
 import com.emojify.me.utils.shareImageUtil
 import kotlinx.android.synthetic.main.activity_main.*
@@ -108,13 +108,13 @@ class MainActivity : BaseActivity(), MainView, View.OnClickListener {
         if (takePictureIntent.resolveActivity(packageManager) != null) {
             val photoUri = mainPresenter.onTakePicture()
 
-            if (photoUri != null){
+            if (photoUri != null) {
                 // Add the URI so the camera can store the image
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
 
                 // Launch the camera activity
                 startActivityForResult(takePictureIntent, requestImageCapture)
-            }else{
+            } else {
                 Toast.makeText(this, "Could not Launch camera", Toast.LENGTH_SHORT).show()
             }
         }
@@ -122,9 +122,9 @@ class MainActivity : BaseActivity(), MainView, View.OnClickListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         // If the image capture activity was called and was successful
-        when(resultCode){
+        when (resultCode) {
             Activity.RESULT_OK -> {
-                if(requestCode == requestImageCapture){
+                if (requestCode == requestImageCapture) {
                     // Process the image and set it to the ImageView
                     mainPresenter.onActivityResultSuccess()
                 }
@@ -156,14 +156,14 @@ class MainActivity : BaseActivity(), MainView, View.OnClickListener {
         mResultsBitmap = resamplePicUtil(this, photoPath)
 
         // Detect the faces and overlay the appropriate emoji
-        mResultsBitmap = Emojifier.detectFacesAndOverlayEmoji(this, mResultsBitmap)
+        mResultsBitmap = Emojifier.detectFacesAndOverlayEmoji(this, mResultsBitmap!!)
 
         // Set the new bitmap to the ImageView
         image_view.setImageBitmap(mResultsBitmap)
     }
 
     override fun shareImage(photoPath: String, savedPhotoLocation: String?) {
-        if (savedPhotoLocation != null){
+        if (savedPhotoLocation != null) {
             // Show a Toast with the save location
             Toast.makeText(this, getString(R.string.saved_message, savedPhotoLocation),
                     Toast.LENGTH_SHORT).show()
@@ -182,8 +182,17 @@ class MainActivity : BaseActivity(), MainView, View.OnClickListener {
         clear_button.visibility = View.GONE
 
         // If there is an error deleting the file, show a Toast
-        if(!isFileDeleted){
+        if (!isFileDeleted) {
             Toast.makeText(this, getString(R.string.error), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun notifyUserOfSavedImage(savedPhotoLocation: String?) {
+        if (savedPhotoLocation != null) {
+            // Show a Toast with the save location
+            Toast.makeText(this, getString(R.string.saved_message, savedPhotoLocation), Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, getString(R.string.not_saved), Toast.LENGTH_SHORT).show()
         }
     }
 }

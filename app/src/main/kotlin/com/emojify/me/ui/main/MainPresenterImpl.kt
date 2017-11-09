@@ -39,7 +39,9 @@ constructor(val dataManager: DataManager, val schedulerProvider: SchedulerProvid
 
         dataManager.deleteImageFile(photoPath)
 
-        dataManager.saveImageFile(bitmap)
+        val savedImagePath = dataManager.saveImageFile(bitmap)
+
+        baseView.notifyUserOfSavedImage(savedImagePath)
     }
 
     override fun onShareBtnClicked(bitmap: Bitmap?) {

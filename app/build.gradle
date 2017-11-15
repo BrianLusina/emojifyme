@@ -135,7 +135,7 @@ android {
                 // Assigns the new version code to versionCodeOverride, which changes the version code
                 // for only the output APK, not for the variant itself. Skipping this step simply
                 // causes Gradle to use the value of variant.versionCode for the APK.
-                output.versionCodeOverride = baseAbiVersionCode * 1000 + variant.versionCode
+                output.versionCodeOverride = baseAbiVersionCode * 1200 + variant.versionCode
             } else {
                 // this will make sure universal apks have the lowest version code
                 output.versionCodeOverride = variant.versionCode

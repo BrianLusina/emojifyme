@@ -2,6 +2,8 @@
 
 A toy app for "emojifying" your face :smile: with your camera. This project has great consideration for modularity and is focused on MVP (Model View Presenter) pattern. Even though it is a small project, this pattern allows it to be easily adopted and built upon easily.
 
+View the app on [PlayStore](https://play.google.com/store/apps/details?id=com.emojify.me)
+
 ## Getting Started
 
 Simply clone the project onto your local machine and you are ready to go.

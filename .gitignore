@@ -7,7 +7,7 @@ build/
 /captures
 google-services.json
 keystore.properties
-
+app/release/
 
 # Created by https://www.gitignore.io/api/intellij,android,java
 

@@ -8,7 +8,7 @@ import com.android.build.OutputFile
 ext{
     multidexSupport = "1.0.2"
 
-    playServicesVersion = "11.4.2"
+    playServicesVersion = "11.6.0"
     daggerVersion = "2.12"
 
     rxJavaVersion = "2.1.6"

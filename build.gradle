@@ -34,6 +34,10 @@ ext {
 
     supportLibVersion = "27.0.1"
 
+    keystorePropertiesFile = rootProject.file("keystore.properties")
+    keystoreProperties = new Properties()
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
     /**
      * Set this to true to create two separate APKs instead of one:
      *   - An APK that only works on ARM devices

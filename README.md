@@ -10,6 +10,18 @@ Simply clone the project onto your local machine and you are ready to go.
 $ git clone https://github.com/BrianLusina/emojifyme.git
 ```
 
+Create a `keystores.properties` file that matches something like this:
+
+```properties
+keyAlias=<KEY_ALIAS>
+keyPassword=<KEY_PASSWORD>
+storeFile=<STORE_FILE>
+storePassword=<STORE_PASSWORD>
+```
+> Keystore properties file
+
+This will be used when generating release builds. Read more about this [here](https://developer.android.com/studio/publish/app-signing.html)
+
 ## Pre-requisites
 
 You will need to have [Android Studio 3.0](https://developer.android.com/studio/index.html) installed on your development environment. This project is developed with Android Studio 3.0 stable release.

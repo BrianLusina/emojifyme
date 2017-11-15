@@ -58,13 +58,21 @@ android {
         }
     }
 
+    signingConfigs{
+        release{
+            keyAlias rootProject.ext.keystoreProperties["keyAlias"]
+            keyPassword rootProject.ext.keystoreProperties["keyPassword"]
+            storeFile rootProject.file(rootProject.ext.keystoreProperties["storeFile"])
+            storePassword rootProject.ext.keystoreProperties["storePassword"]
+        }
+    }
 
     buildTypes {
         release {
             debuggable false
             minifyEnabled true
             shrinkResources true
-            // signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
             resValue "string", "app_name", "EmojifyMe"
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }

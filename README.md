@@ -1,6 +1,6 @@
 # EmojifyMe
 
-A toy app for "emojifying" your face :smile: with your camera.
+A toy app for "emojifying" your face :smile: with your camera. This project has great consideration for modularity and is focused on MVP (Model View Presenter) pattern. Even though it is a small project, this pattern allows it to be easily adopted and built upon easily.
 
 ## Getting Started
 

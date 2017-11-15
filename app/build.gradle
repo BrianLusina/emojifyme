@@ -8,7 +8,7 @@ import com.android.build.OutputFile
 ext{
     multidexSupport = "1.0.2"
 
-    playServicesVersion = "11.4.2"
+    playServicesVersion = "11.6.0"
     daggerVersion = "2.12"
 
     rxJavaVersion = "2.1.6"
@@ -58,13 +58,21 @@ android {
         }
     }
 
+    signingConfigs{
+        release{
+            keyAlias rootProject.ext.keystoreProperties["keyAlias"]
+            keyPassword rootProject.ext.keystoreProperties["keyPassword"]
+            storeFile rootProject.file(rootProject.ext.keystoreProperties["storeFile"])
+            storePassword rootProject.ext.keystoreProperties["storePassword"]
+        }
+    }
 
     buildTypes {
         release {
             debuggable false
             minifyEnabled true
             shrinkResources true
-            // signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
             resValue "string", "app_name", "EmojifyMe"
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
@@ -127,7 +135,7 @@ android {
                 // Assigns the new version code to versionCodeOverride, which changes the version code
                 // for only the output APK, not for the variant itself. Skipping this step simply
                 // causes Gradle to use the value of variant.versionCode for the APK.
-                output.versionCodeOverride = baseAbiVersionCode * 1000 + variant.versionCode
+                output.versionCodeOverride = baseAbiVersionCode * 1200 + variant.versionCode
             } else {
                 // this will make sure universal apks have the lowest version code
                 output.versionCodeOverride = variant.versionCode
